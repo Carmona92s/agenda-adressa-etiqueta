@@ -67,7 +67,7 @@ public class GuardarRecuperar {
         bur.close();
         return llistaContactes;
     }
-    public static boolean guardarAgenda(String nomArxiu)
+    public static boolean guardarAgenda(String nomArxiu) 
             throws IOException {
         // desa el contingut de la col·lecció donada en el primer paràmetre
         // a l'arxiu especificat pel segon paràmetre.
@@ -77,28 +77,37 @@ public class GuardarRecuperar {
             System.out.println("Agenda buida, no hi ha res a guardar!");
         } else {
             // Tipus de fitxer
-            try {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(nomArxiu))){ 
                 // Línia a esborrar afegida perquè no aparegui cap error
                 int prova = Character.getNumericValue(nomArxiu.charAt(0));
                 // Tipus de canal
                 for (Contacte contacte : getLlistaContactes()) {
                     // Escriure el nom del contacte ...
-
+                   
                     // Escriure el cognom del contacte ...
 
                     // Obtenir TOTS els telèfons del contacte per poder
                     // iterar sobre TOTS els telèfons del contacte.
+                     bw.write(contacte.getNom());
+                    bw.newLine();
+                    bw.write(contacte.getCognom());
+                    bw.newLine();
+
                     for (Telefon telefon : contacte.getLlistaTelefons()) {
                         // Escriure el número del telèfon del contacte
 
                         // seguit del separador de l'etiqueta del telèfon i el número de teléfon.
 
                         // més escriure l'etiqueta del telèfon del contacte més el salt de línia
+                        bw.write(telefon.getNumero() + SEPARADOR_ETIQUETA_TELEFON + telefon.getEtiqueta());
+                        bw.newLine();
 
                     }
 
                     // desar marca de MARCA_FINAL_TELEFONS per indicar
                     // que ja no hi ha més telèfons del contacte
+                     bw.write(MARCA_FINAL_TELEFONS);
+                    bw.newLine();
 
                     if (contacte.getLlistaAdreces() == null) {
                         System.out.printf("No hi ha adreces per guardar!");
@@ -117,9 +126,23 @@ public class GuardarRecuperar {
                             // Escriure el nom de la ciutat de l'adreça del contacte més el salt de línia
 
                             // Escriure el nom del país de l'adreça del contacte més el salt de línia
+                            bw.write(adressa.getEtiqueta());
+                        bw.newLine();
+                        bw.write(adressa.getCarrer());
+                        bw.newLine();
+                        bw.write(String.valueOf(adressa.getNumero()));
+                        bw.newLine();
+                        bw.write(adressa.getCodiPostal());
+                        bw.newLine();
+                        bw.write(adressa.getCiutat());
+                        bw.newLine();
+                        bw.write(adressa.getPais());
+                        bw.newLine();
                         }
 
                         // desar marca de MARCA_FINAL_ADRESSES de la seqüència de telèfons  més el salt de línia
+                         bw.write(MARCA_FINAL_ADRECES);
+                    bw.newLine();
                     }
                 }
                 System.out.println("Agenda guardada al fitxer " +
